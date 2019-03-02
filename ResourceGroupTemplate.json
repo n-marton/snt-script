@@ -42,6 +42,10 @@
         "name": {
             "type": "string",
             "value": "[parameters('resourceGroupName')]"
+        },
+        "rgid": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Authorization/policyDefinitions', parameters('policyDefinitionName'))]"
         }
     }
 }
