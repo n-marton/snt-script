@@ -1,0 +1,43 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resourceGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource group name."
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource group location."
+            }
+        },
+        "resourceGroupTags": {
+            "type": "object",
+            "defaultValue": {
+                "Company": "Sentia"
+            },
+            "metadata": {
+                "description": "Resource group tags."
+            }
+        }
+    },
+    "resources": [
+        {
+            "name": "[parameters('resourceGroupName')]",
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2018-05-01",
+            "location": "[parameters('location')]",
+            "tags": "[parameters('resourceGroupTags')]",
+            "properties": {}
+        }
+    ],
+    "outputs": {
+        "location": {
+            "type": "string",
+            "value": "[parameters('location')]"
+        }
+    }
+}

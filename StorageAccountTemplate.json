@@ -1,0 +1,71 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "storageAccountName":{
+        "type": "string",
+        "metadata": {
+          "description": "Azure Storage account name."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "[resourceGroup().location]",
+        "metadata": {
+          "description": "Location for all resources."
+        }
+      },
+      "fileEncryption": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "Switch for enabling or disabling file encryption"
+        }
+      },
+      "blobEncryption": {
+        "type": "bool",
+        "defaultValue": true,
+        "metadata": {
+          "description": "Switch for enabling or disabling blob encryption"
+        }
+      },
+      "sku": {
+        "type":"string",
+        "defaultValue": "Standard_LRS",
+        "metadata": {
+          "description": "Gets or sets the SKU name. Required for account creation; optional for update. Note that in older versions, SKU name was called accountType. - Standard_LRS, Standard_GRS, Standard_RAGRS, Standard_ZRS, Premium_LRS, Premium_ZRS"
+        }        
+      }     
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Storage/storageAccounts",
+        "name": "[parameters('storageAccountName')]",
+        "apiVersion": "2018-07-01",
+        "location": "[parameters('location')]",
+        "sku": {
+          "name": "[parameters('sku')]"
+        },
+        "kind": "Storage",
+        "properties": {
+            "encryption": {
+                "services": {
+                  "blob": {
+                    "enabled": "[parametes('blobEncryption')]"
+                  },
+                  "file": {
+                    "enabled": "[parametes('fileEncryption')]"
+                  }
+                },
+                "keySource":"Microsoft.Storage"
+              }
+        }
+      }
+    ],
+    "outputs": {
+        "storageUri": {
+            "type": "string",
+            "value": "[reference(parameters('storageAccountName')).primaryEndpoints.blob]"
+          }
+    }
+  }
