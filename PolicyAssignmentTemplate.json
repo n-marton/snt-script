@@ -1,0 +1,35 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "policyDefinitionId": {
+            "type": "string",
+            "metadata": {
+                "description": "Policy definition id."
+            }
+        },
+        "policyAssignementName": {
+            "type": "string",
+            "metadata": {
+                "description": "Policy definition display name."
+            }
+        },
+        "policyResourceGroupId": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource group id."
+            }
+        }
+    },
+    "resources": [
+        {
+            "name": "[parameters('policyAssignementName')]",
+            "type": "Microsoft.Authorization/policyAssignments",
+            "apiVersion": "2018-05-01",
+            "properties": {
+                "policyDefinitionId":"[parameters('policyDefinitionId')]",
+                "scope": "[parameters('policyResourceGroupId')]"
+            }
+        }
+    ]
+}
