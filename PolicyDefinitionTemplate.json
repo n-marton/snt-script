@@ -1,0 +1,44 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "policyDefinitionName": {
+            "type": "string",
+            "metadata": {
+                "description": "Policy definition name."
+            }
+        },
+        "policyDefinitionDisplayName": {
+            "type": "string",
+            "metadata": {
+                "description": "Policy definition display name."
+            },
+            "defaultValue": "sentia-resource-type-restriction"
+        },
+         "policyMap": {
+            "type":"object",
+            "metadata": {
+                "description": "Map of the policy definition"
+            }
+        }
+    },
+    "resources": [
+        {
+            "name": "[parameters('policyDefinitionName')]",
+            "type": "Microsoft.Authorization/policyDefinitions",
+            "apiVersion": "2018-05-01",
+            "properties": {
+                "policyType": "Custom",
+                "mode": "All",
+                "displayName": "[parameters('policyDefinitionDisplayName')]",
+                "policyRule": {}
+            }
+        }
+    ],
+    "outputs": {
+        "pdid": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Authorization/policyDefinitions', parameters('policyDefinitionName'))]"
+        }
+    }
+}
