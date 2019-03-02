@@ -47,6 +47,9 @@
       {
         "type": "Microsoft.Storage/storageAccounts",
         "resourceGroup": "[parameters('resourceGroupName')]",
+        "dependsOn": [
+            "[resourceId('Microsoft.Resources/resourceGroups/', parameters('resourceGroupName'))]"
+        ],
         "name": "[parameters('storageAccountName')]",
         "apiVersion": "2018-07-01",
         "location": "[parameters('location')]",
