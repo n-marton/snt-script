@@ -57,10 +57,10 @@
             "encryption": {
                 "services": {
                   "blob": {
-                    "enabled": "[parametes('blobEncryption')]"
+                    "enabled": "[parameters('blobEncryption')]"
                   },
                   "file": {
-                    "enabled": "[parametes('fileEncryption')]"
+                    "enabled": "[parameters('fileEncryption')]"
                   }
                 },
                 "keySource":"Microsoft.Storage"
