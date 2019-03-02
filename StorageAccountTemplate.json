@@ -46,7 +46,6 @@
     "resources": [
       {
         "type": "Microsoft.Storage/storageAccounts",
-        "resourceGroup": "[parameters('resourceGroupName')]",
         "dependsOn": [
             "[resourceId('Microsoft.Resources/resourceGroups/', parameters('resourceGroupName'))]"
         ],
