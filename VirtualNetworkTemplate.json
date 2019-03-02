@@ -35,5 +35,11 @@
         }
       }
     }
-  ]
+  ],
+  "outputs": {
+    "vnname": {
+      "type": "string",
+      "value": "[parameters('virtualNetworkName')]"
+    }
+  }
 }
