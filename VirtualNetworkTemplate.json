@@ -6,8 +6,7 @@
       "type": "string",
       "metadata": {
         "description": "Virtual network name."
-      },
-      "defaultValue": "sentia_vn"
+      }
     },
     "location": {
       "type": "string",
@@ -32,9 +31,7 @@
       "tags": {},
       "properties": {
         "addressSpace": {
-          "addressPrefixes": [
-            "[parameters('addressPrefix')]"
-          ]
+          "addressPrefixes": "[parameters('addressPrefix')]"
         }
       }
     }
