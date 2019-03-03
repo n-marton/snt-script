@@ -45,7 +45,7 @@
         },
         "rgid": {
             "type": "string",
-            "value": "[resourceId('Microsoft.Authorization/policyDefinitions', parameters('resourceGroupName'))]"
+            "value": "[resourceId('Microsoft.Resources/resourceGroups', parameters('resourceGroupName'))]"
         }
     }
 }
