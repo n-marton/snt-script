@@ -1,5 +1,5 @@
 [template]
-src = "template.toml"
+src = "template.tmpl"
 dest = "/opt/snt/rendered.json"
 keys = [
     "/ResourceGroupName",
