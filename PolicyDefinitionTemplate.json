@@ -31,7 +31,7 @@
                 "policyType": "Custom",
                 "mode": "All",
                 "displayName": "[parameters('policyDefinitionDisplayName')]",
-                "policyRule": {}
+                "policyRule":  "[parameters('policyMap')]"
             }
         }
     ],
