@@ -1,0 +1,30 @@
+{
+    "ResourceGroupName": "templatedrg",
+    "ResourceGroupTags": {
+        "Company": "Sentia",
+        "Environment": "Test"
+    },
+    "isSaPrefixed": true,
+    "StorageAccountName": "templatedsa",
+    "StorageFileEncryption": true,
+    "StorageBlobEncryption": true,
+    "SKU": "Standard_LRS",
+    "Location": "westeurope",
+    "VirtualNetworkName": "sentiaVn",
+    "AddressSpaces": [
+        "172.16.0.0/12"
+    ],
+    "Subnets": [
+        "172.16.1.0/24",
+        "172.16.2.0/24",
+        "172.16.3.0/24"
+    ],
+    "PolicyDefinitionName": "samplepd",
+    "PolicyDefinitionDisplayName": "sample-pd",
+    "PolicyAssignementName": "samplepa",
+    "EnabledResourceTypes": [
+        "Microsoft.Compute/*",
+        "Microsoft.Network/*",
+        "Microsoft.Storage/*"
+    ]
+}
