@@ -19,6 +19,12 @@
             "metadata": {
                 "description": "Resource group id."
             }
+        },
+        "resourceGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Resource group name."
+            }
         }
     },
     "resources": [
@@ -28,7 +34,7 @@
             "apiVersion": "2018-05-01",
             "properties": {
                 "policyDefinitionId":"[parameters('policyDefinitionId')]",
-                "scope": "[parameters('policyResourceGroupId')]"
+                "scope": "[concat(subscription().id, '/resourceGroups/', parameters('resourceGroupName'))]"
             }
         }
     ]
