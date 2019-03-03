@@ -14,10 +14,16 @@
                 "description": "Policy definition display name."
             }
         },
-        "policyResourceGroupId": {
+        "policyResourceGroupName": {
             "type": "string",
             "metadata": {
                 "description": "Resource group id."
+            }
+        },
+        "subscriptionName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the subscription."
             }
         }
     },
@@ -28,7 +34,7 @@
             "apiVersion": "2018-05-01",
             "properties": {
                 "policyDefinitionId":"[parameters('policyDefinitionId')]",
-                "scope": "[parameters('policyResourceGroupId')]"
+                "scope": "[concat(parameters('subscriptionName'),'/',parameters('policyResourceGroupId')])"
             }
         }
     ]
