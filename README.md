@@ -11,7 +11,7 @@ To make it able to run you have to do the following:
     2. REST_ARM_CLIENT_SECRET -> 'password' from rbac creation response
     3. REST_ARM_TENANT_ID -> 'tenant' from rbac creation response
     4. REST_ARM_SUBSCRIPTION_ID -> your subscription id
-5. `git@github.com:n-marton/snt-script.git`
+5. `git clone git@github.com:n-marton/snt-script.git`
 6. `cd snt-scrip/deploy`
 7. run ./run.sh (You need docker engine installed)
 8. All additional parameters will be handled by the scripts
