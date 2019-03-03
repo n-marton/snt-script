@@ -14,12 +14,6 @@
                 "description": "Policy definition display name."
             }
         },
-        "policyResourceGroupId": {
-            "type": "string",
-            "metadata": {
-                "description": "Resource group id."
-            }
-        },
         "resourceGroupName": {
             "type": "string",
             "metadata": {

@@ -16,9 +16,6 @@
         },
         "resourceGroupTags": {
             "type": "object",
-            "defaultValue": {
-                "Company": "Sentia"
-            },
             "metadata": {
                 "description": "Resource group tags."
             }
