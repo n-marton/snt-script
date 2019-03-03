@@ -14,4 +14,8 @@ keys = [
     "/PolicyDefinitionDisplayName",
     "/PolicyAssignementName",
     "/EnabledResourceTypes",
+    "/StorageFileEncryption",
+    "/StorageBlobEncryption",
+    "/SKU",
+
 ]

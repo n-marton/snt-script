@@ -72,8 +72,14 @@
                             "location": {
                                 "value": "[variables('location')]"
                             },
-                            "resourceGroupName": {
-                                "value": "[reference('resourcegroup').outputs.name.value]"
+                            "storageFileEncryption": {
+                                "value": "[variables('storage_file_encryption')]"
+                            },
+                            "storageBlobEncryption": {
+                                "value": "[variables('storage_blob_encryption')]"
+                            },
+                            "sku": {
+                                "value": "[variables('sku')]"
                             }
                         }
                     }
@@ -187,8 +193,8 @@
                             "policyAssignementName": {
                                 "value": "[variables('pa_name')]"
                             },
-                            "policyResourceGroupId": {
-                                "value": "[reference('resourcegroup').outputs.rgid.value]"
+                            "resourceGroupName": {
+                                "value": "[reference('resourcegroup').outputs.name.value]"
                             }
                         }
                     }
@@ -204,6 +210,9 @@
                 },
                 "isSaPrefixed": {{ getv "/isSaPrefixed" }},
                 "saname": "{{ getv "/StorageAccountName" }}",
+                "storage_file_encryption": {{ getv "/StorageFileEncryption" }},
+                "storage_blob_encryption": {{ getv "/StorageBlobEncryption" }},
+                "sku": "{{ getv "/SKU" }}",
                 "location": "{{ getv "/Location" }}",
                 "vnname": "{{ getv "/VirtualNetworkName" }}",
                 "address_space": [
