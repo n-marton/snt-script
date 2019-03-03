@@ -72,10 +72,10 @@
                             "location": {
                                 "value": "[variables('location')]"
                             },
-                            "storageFileEncryption": {
+                            "fileEncryption": {
                                 "value": "[variables('storage_file_encryption')]"
                             },
-                            "storageBlobEncryption": {
+                            "blobEncryption": {
                                 "value": "[variables('storage_blob_encryption')]"
                             },
                             "sku": {
