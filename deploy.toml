@@ -1,0 +1,17 @@
+[template]
+src = "template.toml"
+dest = "/opt/snt/rendered.json"
+keys = [
+    "/ResourceGroupName",
+    "/ResourceGroupTags",
+    "/isSaPrefixed",
+    "/StorageAccountName",
+    "/Location",
+    "/VirtualNetworkName",
+    "/AddressSpaces",
+    "/Subnets",
+    "/PolicyDefinitionName",
+    "/PolicyDefinitionDisplayName",
+    "/PolicyAssignementName",
+    "/EnabledResourceTypes",
+]
