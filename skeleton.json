@@ -1,0 +1,236 @@
+{
+    "location": "{{ getv "/Location" }}",
+    "properties": {
+        "mode": "incremental",
+        "template": {
+            "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+            "contentVersion": "1.0.0.0",
+            "functions": [
+                {
+                    "namespace": "helper",
+                    "members": {
+                        "prefixer": {
+                            "parameters": [
+                                {
+                                    "name": "saName",
+                                    "type": "string"
+                                },
+                                {
+                                    "name": "saPrefix",
+                                    "type": "string"
+                                }
+                            ],
+                            "output": {
+                                "type": "string",
+                                "value": "[concat(parameters('saPrefix'), parameters('saName'))]"
+                            }
+                        }
+                    }
+                }
+            ],
+            "resources": [
+                {
+                    "apiVersion": "2018-05-01",
+                    "name": "resourcegroup",
+                    "type": "Microsoft.Resources/deployments",
+                    "location": "[variables('location')]",
+                    "properties": {
+                        "mode": "Incremental",
+                        "templateLink": {
+                            "uri": "https://raw.githubusercontent.com/n-marton/snt-script/master/ResourceGroupTemplate.json"
+                        },
+                        "parameters": {
+                            "resourceGroupName": {
+                                "value": "[variables('rgname')]"
+                            },
+                            "location": {
+                                "value": "[variables('location')]"
+                            },
+                            "resourceGroupTags": {
+                                "value": "[variables('rgtags')]"
+                            }
+                        }
+                    }
+                },
+                {
+                    "apiVersion": "2018-07-01",
+                    "name": "storageaccount",
+                    "type": "Microsoft.Resources/deployments",
+                    "resourceGroup": "[variables('rgname')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Resources/deployments/', 'resourcegroup')]"
+                    ],
+                    "properties": {
+                        "mode": "Incremental",
+                        "templateLink": {
+                            "uri": "https://raw.githubusercontent.com/n-marton/snt-script/master/StorageAccountTemplate.json"
+                        },
+                        "parameters": {
+                            "storageAccountName": {
+                                "value": "[if(variables('isSaPrefixed'), helper.prefixer(variables('saname'), 'sentia'),  variables('saname'))]"
+                            },
+                            "location": {
+                                "value": "[variables('location')]"
+                            },
+                            "resourceGroupName": {
+                                "value": "[reference('resourcegroup').outputs.name.value]"
+                            }
+                        }
+                    }
+                },
+                {
+                    "apiVersion": "2018-11-01",
+                    "name": "virtualnetwork",
+                    "type": "Microsoft.Resources/deployments",
+                    "resourceGroup": "[variables('rgname')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Resources/deployments/', 'resourcegroup')]"
+                    ],
+                    "properties": {
+                        "mode": "Incremental",
+                        "templateLink": {
+                            "uri": "https://raw.githubusercontent.com/n-marton/snt-script/master/VirtualNetworkTemplate.json"
+                        },
+                        "parameters": {
+                            "virtualNetworkName": {
+                                "value": "[variables('vnname')]"
+                            },
+                            "location": {
+                                "value": "[variables('location')]"
+                            },
+                            "addressPrefix": {
+                                "value": "[variables('address_space')]"
+                            }
+                        }
+                    }
+                },
+                {
+                    "apiVersion": "2018-11-01",
+                    "name": "[concat('subnet-', replace(replace(variables('subnets')[copyIndex()], '.', '-'), '/', '-'))]",
+                    "type": "Microsoft.Resources/deployments",
+                    "resourceGroup": "[variables('rgname')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Resources/deployments/', 'resourcegroup')]"
+                    ],
+                    "properties": {
+                        "mode": "Incremental",
+                        "templateLink": {
+                            "uri": "https://raw.githubusercontent.com/n-marton/snt-script/master/SubNetTemplate.json"
+                        },
+                        "parameters": {
+                            "virtualNetworkName": {
+                                "value": "[concat(reference('virtualnetwork').outputs.vnname.value,'/','subnet-', replace(replace(variables('subnets')[copyIndex()], '.', '-'), '/', '-'))]"
+                            },
+                            "addressPrefix": {
+                                "value": "[variables('subnets')[copyIndex()]]"
+                            }
+                        }
+                    },
+                    "copy": {
+                        "name": "subnets",
+                        "mode": "Serial",
+                        "count": "[length(variables('enabled_resource_types'))]"
+                    }
+                },
+                {
+                    "apiVersion": "2018-05-01",
+                    "name": "policydefinition",
+                    "type": "Microsoft.Resources/deployments",
+                    "location": "[variables('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Resources/deployments/', 'resourcegroup')]"
+                    ],
+                    "properties": {
+                        "mode": "Incremental",
+                        "templateLink": {
+                            "uri": "https://raw.githubusercontent.com/n-marton/snt-script/master/PolicyDefinitionTemplate.json"
+                        },
+                        "parameters": {
+                            "policyDefinitionName": {
+                                "value": "[variables('pd_name')]"
+                            },
+                            "policyDefinitionDisplayName" : {
+                                "value": "[variables('pd_display_name')]"
+                            },
+                            "policyMap": {
+                                "value": {
+                                    "if": {
+                                        "not": {
+                                            "anyOf": "[variables('enabled_resource_types')]"
+                                        }
+                                    },
+                                    "then": {
+                                        "effect": "deny"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "apiVersion": "2018-05-01",
+                    "name": "policyassignement",
+                    "type": "Microsoft.Resources/deployments",
+                    "resourceGroup": "[variables('rgname')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Resources/deployments/', 'resourcegroup')]"
+                    ],
+                    "properties": {
+                        "mode": "Incremental",
+                        "templateLink": {
+                            "uri": "https://raw.githubusercontent.com/n-marton/snt-script/master/PolicyAssignmentTemplate.json"
+                        },
+                        "parameters": {
+                            "policyDefinitionId": {
+                                "value": "[reference('policydefinition').outputs.pdid.value]"
+                            },
+                            "policyAssignementName": {
+                                "value": "[variables('pa_name')]"
+                            },
+                            "policyResourceGroupId": {
+                                "value": "[reference('resourcegroup').outputs.rgid.value]"
+                            }
+                        }
+                    }
+                }
+            ],
+            "variables": {
+                "rgname": "{{ getv "/ResourceGroupName" }}",
+                "rgtags": {
+                    {{ range $i, $v := gets "/ResourceGroupTags/*" }}
+                    {{ if eq $i 0}}{{else}},{{ end }}
+                    "{{replace $v.Key "/ResourceGroupTags/" "" -1 }}": "{{$v.Value}}"
+                    {{end }}
+                },
+                "isSaPrefixed": {{ getv "/isSaPrefixed" }},
+                "saname": "{{ getv "/StorageAccountName" }}",
+                "location": "{{ getv "/Location" }}",
+                "vnname": "{{ getv "/VirtualNetworkName" }}",
+                "address_space": [
+                    {{range $i, $v := getvs "/AddressSpaces/*" }}
+                    {{ if eq $i 0}}{{else}},{{ end }}     
+                    "{{ $v }}"                                         
+                    {{end }}
+                ],
+                "subnets": [
+                    {{range $i, $v := getvs "/Subnets/*" }}
+                    {{ if eq $i 0}}{{else}},{{ end }}     
+                    "{{ $v }}"        
+                    {{end }}
+                ],
+                "pd_name": "{{ getv "/PolicyDefinitionName" }}",
+                "pd_display_name": "{{ getv "/PolicyDefinitionDisplayName" }}",
+                "pa_name": "{{ getv "/PolicyAssignementName" }}",
+                "enabled_resource_types": [
+                    {{range $i, $v := getvs "/EnabledResourceTypes/*" }}
+                    {{ if eq $i 0}}{{else}},{{ end }}
+                    {
+                        "field": "type",
+                        "like": "{{ $v }}"
+                    }
+                    {{end}}
+                ]
+            }
+        }
+    }
+}
