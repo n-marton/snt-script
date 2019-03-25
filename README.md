@@ -24,3 +24,5 @@ The deployment workflow:
 3. Rest auth
 4. Rest request
 5. Return state after the deployment finished either successfully or not
+
+![Workflow](wf.png)
